@@ -5,6 +5,6 @@
 * Добавляем в беседу
 * Выдаём права администратора
 * В чат пишем сообщение "Танос"
-![Иллюстрация к проекту](https://github.com/YarikMix/vk-thanos-bot/raw/main/image/example.png)
+![Иллюстрация к проекту](https://github.com/YarikMix/vk-thanos-bot/raw/main/images/example.png)
 
 ### После этого половина участников беседы будут кикнуты

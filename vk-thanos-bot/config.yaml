@@ -1,5 +1,3 @@
 group:
   group_id: ""  # id группы
   group_key: ""  # Ключ сообщества
-access_token:
-  token: ""  # Ваш токен c правами messages

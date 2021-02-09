@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-import random, time
+import random
+import time
 
 import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
@@ -13,28 +14,21 @@ with open("config.yaml") as ymlFile:
 
 
 class Bot:
-    def auth(self):
-        self.authorize = vk_api.VkApi(token=config["group"]["group_token"])
+    def __init__(self):
+        authorize = vk_api.VkApi(token=config["group"]["group_token"])
         self.longpoll = VkBotLongPoll(
-            self.authorize,
+            authorize,
             group_id=config["group"]["group_id"]
         )
 
-        self.upload = vk_api.VkUpload(self.authorize)
-        self.bot = self.authorize.get_api()
+        self.bot = authorize.get_api()
 
-        vk_session = vk_api.VkApi(
-            token=config["access_token"]["token"]
-        )
-
-        self.vk = vk_session.get_api()
-
-    def destroy(self):
+    def destroy(self, chat_id):
         # Создаём интригу
         time.sleep(random.randint(1, 5))
 
         self.bot.messages.send(
-            chat_id=self.chat_id,
+            chat_id=chat_id,
             message=random.choice(quotes),
             random_id=get_random_id()
         )
@@ -44,7 +38,7 @@ class Bot:
 
         # Получаем участников беседы
         chat_members = self.bot.messages.getConversationMembers(
-            peer_id=2000000000 + self.chat_id,
+            peer_id=2000000000 + chat_id,
             group_id=config["group"]["group_id"],
         )["items"]
 
@@ -59,7 +53,7 @@ class Bot:
         for _ in range(len(users) // 2):
             user = random.choice(users)
             self.bot.messages.removeChatUser(
-                chat_id=self.chat_id,
+                chat_id=chat_id,
                 user_id=user["member_id"]
             )
 
@@ -68,17 +62,14 @@ class Bot:
         print("Success")
 
     def run(self):
-        self.auth()
-        
         print("Начинаю мониторинг сообщений...")
 
         # Отслеживаем каждое событие в беседе
         try:
             for event in self.longpoll.listen():
                 if event.type == VkBotEventType.MESSAGE_NEW and event.from_chat and event.message.get("text") != "":
-                    self.chat_id = event.chat_id
                     if event.message.get("text").lower() == "танос":
-                        self.destroy()
+                        self.destroy(event.chat_id)
         except Exception as e:
             print(e)
 

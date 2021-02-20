@@ -65,13 +65,14 @@ class Bot:
         print("Начинаю мониторинг сообщений...")
 
         # Отслеживаем каждое событие в беседе
-        try:
-            for event in self.longpoll.listen():
-                if event.type == VkBotEventType.MESSAGE_NEW and event.from_chat and event.message.get("text") != "":
-                    if event.message.get("text").lower() == "танос":
-                        self.destroy(event.chat_id)
-        except Exception as e:
-            print(e)
+        while True:
+            try:
+                for event in self.longpoll.listen():
+                    if event.type == VkBotEventType.MESSAGE_NEW and event.from_chat and event.message.get("text") != "":
+                        if event.message.get("text").lower() == "танос":
+                            self.destroy(event.chat_id)
+            except Exception as e:
+                print(e)
 
 
 if __name__ == "__main__":
